@@ -65,7 +65,7 @@
 <br><br>
 
 - # User Target Range
-  
+  전체이용가로 모두가 즐길 수 있다
 
 <br><br>
 
