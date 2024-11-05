@@ -1,5 +1,5 @@
 # Necro-Circus [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Flimdev59%2FNecro-Circus&count_bg=%2379C83D&title_bg=%23555555&icon=counter-strike.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
-![](circus.jpg)
+![](README/circus.jpg)
 
 #### 2D Game Programing Project  
 
@@ -116,7 +116,7 @@
 3. **탐험 화면**
    - 새로운 지역 탐험 선택
    - 전투 또는 보상 화면으로 전환
-   ![](map.png)
+   ![](README/map.png)
 
 4. **구성 화면**
    - 고용한 괴물 선택 및 공연 구성
