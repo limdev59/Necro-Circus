@@ -1,3 +1,6 @@
+from Manager.SceneMgr import sceneMgr
+from Manager.KeyMgr import keyMgr
+from Manager.EventMgr import eventMgr
 
 class CCore:
     _instance = None
@@ -5,24 +8,29 @@ class CCore:
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            cls._instance.initialized = False
+            cls._instance._running = True
+            cls._instance.eventMgr = eventMgr
+            cls._instance.sceneMgr = sceneMgr
+            cls._instance.keyMgr = keyMgr
         return cls._instance
 
-    def initialize(self):
-        if not self.initialized:
-            print("Core 초기화")
-            self.running = True
-            self.initialized = True
+    def Init(self):
+        print("Core 초기화")
+        self.sceneMgr.Init()
+
+    def Update(self):
+        self.eventMgr.processEvents()
+        self.sceneMgr.Update()
+
+    def Render(self):
+        self.sceneMgr.Render()
+
+    def Clean(self):
+        print("Core 종료")
+        self.sceneMgr.ChangeScene(None)
+        self._running = False
 
     def is_running(self):
-        return self.running
+        return self._running
 
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
-
-    def cleanup(self):
-        print("Core 종료")
-        self.running = False
+Core = CCore()
