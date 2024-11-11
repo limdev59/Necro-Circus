@@ -280,3 +280,34 @@
   - 7주차: 최종 테스트 및 배포 준비
 
 <br><br>  
+
+### 1~3주차 개발 진행 요약
+최근 커밋(3일 전)된 파일들:
+
+Manager (framework commit 2)
+Object (framework commit 2)
+Scene (framework commit 2)
+CCore.py (framework commit 2)
+CObject.py (framework commit 2)
+CScene.py (framework commit 2)
+Constants.py (framework commit 2)
+지난주 커밋된 파일들:
+
+UI (framework commit)
+Config.py (framework commit)
+GameData.py (framework commit)
+Utility.py (framework commit)
+커밋 날짜가 명시되지 않은 파일:
+
+main.py (커밋 정보 없음)
+
+싱글톤패턴의 프레임워크를 개발함, 직접 도트를 찍어 배경과 스프라이트 이미지를 만듬  
+
+![](README/skeleton_large_after.jpg)  
+![](README/girl.jpg)  
+![](README/backgrounds1.jpg)  
+![](README/backgrounds2.jpg)  
+![](README/backgrounds3.jpg)  
+![](README/backgrounds4.jpg)  
+![](README/backgrounds5.jpg)  
+
