@@ -303,11 +303,11 @@ main.py (커밋 정보 없음)
 
 싱글톤패턴의 프레임워크를 개발함, 직접 도트를 찍어 배경과 스프라이트 이미지를 만듬  
 
-![](README/skeleton_large_after.jpg)  
-![](README/girl.jpg)  
-![](README/backgrounds1.jpg)  
-![](README/backgrounds2.jpg)  
-![](README/backgrounds3.jpg)  
-![](README/backgrounds4.jpg)  
-![](README/backgrounds5.jpg)  
+![](README/skeleton_large_after.png)  
+![](README/girl.png)  
+![](README/backgrounds1.png)  
+![](README/backgrounds2.png)  
+![](README/backgrounds3.png)  
+![](README/backgrounds4.png)  
+![](README/backgrounds5.png)  
 
