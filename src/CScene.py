@@ -1,27 +1,24 @@
-from CObject import CObject
+from Sprite import Sprite
 from Constants import *
-
+from Constants import OBJECT_TYPE
 
 class CScene:
     def __init__(self):
+        # Enum 멤버를 사용해 초기화
         self.arrObj = {group: [] for group in OBJECT_TYPE}
-        self.initialized = False
-
-    def Init(self):
-        self.initialized = True
 
     def Update(self):
-        if not self.initialized:
-            print("씬이 초기화되지 않았습니다.")
-            return
+        pass
 
     def Render(self):
-        if not self.initialized:
-            print("씬이 초기화되지 않았습니다.")
-            return
+        pass
 
-    def Clean(self):
-        self.initialized = False
+    def Enter(self):
+        pass
 
-    def addObj(self, obj: CObject, group_type: OBJECT_TYPE):
+    def Exit(self):
+        pass
+
+    def addObj(self, obj: Sprite, group_type: OBJECT_TYPE):
+        # Enum 멤버를 키로 사용
         self.arrObj[group_type].append(obj)

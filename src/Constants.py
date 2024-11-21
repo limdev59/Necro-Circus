@@ -7,11 +7,16 @@ class EVENT_TYPE(Enum):
 
 class SCENE_TYPE(Enum):
     START = 0
-    GAME = 1
+    TEST = 1
     END = 2
 
 class OBJECT_TYPE(Enum):
-    END = 0
+    PLAYER = 0
+    ENEMY = 1
+    ITEM = 2
+    BACKGROUND= 3
+
+
 
 class KEY(Enum):
     LEFT = 37     # 화살표 왼쪽
@@ -57,6 +62,32 @@ class KEY(Enum):
     NUM_7 = 55
     NUM_8 = 56
     NUM_9 = 57
+    a = 97
+    b = 98
+    c = 99
+    d = 100
+    e = 101
+    f = 102
+    g = 103
+    h = 104
+    i = 105
+    j = 106
+    k = 107
+    l = 108
+    m = 109
+    n = 110
+    o = 111
+    p = 112
+    q = 113
+    r = 114
+    s = 115
+    t = 116
+    u = 117
+    v = 118
+    w = 119
+    x = 120
+    y = 121
+    z = 122
     LAST = 1000
 
 class KEY_TYPE(Enum):

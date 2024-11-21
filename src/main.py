@@ -6,12 +6,11 @@ def main():
     Core.Init()
 
     while Core.is_running():
-        # print("Running:", Core.is_running())  # 상태 확인용
         clear_canvas()
         Core.Update()
         Core.Render()
         update_canvas()
-        delay(0.05)
+        delay(0.013)
 
     Core.Clean()
     close_canvas()

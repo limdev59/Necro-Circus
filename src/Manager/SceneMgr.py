@@ -15,11 +15,11 @@ class SceneMgr:
         self.currentScene = None
 
         self.arrScene[SCENE_TYPE.START.value] = Start_Scene() 
-        self.arrScene[SCENE_TYPE.GAME.value] = CScene()
+        self.arrScene[SCENE_TYPE.TEST.value] = CScene()
         self.arrScene[SCENE_TYPE.END.value] = CScene()
 
         self.currentScene = self.arrScene[SCENE_TYPE.START.value]
-        self.currentScene.Init()
+        self.currentScene.Enter()
 
     def Update(self):
         if self.currentScene:

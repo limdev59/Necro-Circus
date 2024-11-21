@@ -21,6 +21,7 @@ class CCore:
     def Update(self):
         self.eventMgr.processEvents()
         self.sceneMgr.Update()
+        self.keyMgr.Update()
 
     def Render(self):
         self.sceneMgr.Render()

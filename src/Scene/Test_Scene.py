@@ -1,9 +1,8 @@
 from CScene import CScene
 from Sprites.Player import Player
-# from Manager.SceneMgr import sceneMgr
 from Constants import *
 
-class Start_Scene(CScene):
+class Test_Scene(CScene):
     def __init__(self):
         super().__init__()
 
@@ -18,19 +17,24 @@ class Start_Scene(CScene):
                 obj.Render()
 
     def Enter(self):
-        player = Player(
+        player1 = Player(
             filename="c:/Users/bigma/Documents/GitHub/Necro-Circus/src/Assets/Images/player_default.png",
-            x=400,
+            x=300,
             y=300
-        )   
-        self.addObj(player, OBJECT_TYPE['PLAYER'])
-        if player.x > 790:
-            sceneMgr.ChangeScene(SCENE_TYPE.TEST)
-            
-        print("Start_Scene: 플레이어 추가 완료")
+        )
+        self.addObj(player1, OBJECT_TYPE['PLAYER'])
+
+        player2 = Player(
+            filename="c:/Users/bigma/Documents/GitHub/Necro-Circus/src/Assets/Images/player_default.png",
+            x=500,
+            y=300
+        )
+        self.addObj(player2, OBJECT_TYPE['PLAYER'])
+
+        print("Test_Scene: 두 명의 플레이어 추가 완료")
 
     def Exit(self):
         for group in self.arrObj.values():
             for obj in group:
                 obj.Clean()
-        print("Start_Scene: 종료")
+        print("Test_Scene: 종료")

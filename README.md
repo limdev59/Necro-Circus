@@ -288,7 +288,7 @@ Manager (framework commit 2)
 Object (framework commit 2)
 Scene (framework commit 2)
 CCore.py (framework commit 2)
-CObject.py (framework commit 2)
+Sprite.py (framework commit 2)
 CScene.py (framework commit 2)
 Constants.py (framework commit 2)
 지난주 커밋된 파일들:
