@@ -45,5 +45,4 @@ class KeyMgr:
         else :
             self.vecKey[key]["state"] = KEY_TYPE.NONE
 
-        
 keyMgr = KeyMgr()

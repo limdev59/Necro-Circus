@@ -1,6 +1,6 @@
 from CScene import CScene
 from Constants import *
-from Scene.Start_Scene import Start_Scene
+
 
 class SceneMgr:
     _instance = None
@@ -14,8 +14,11 @@ class SceneMgr:
         self.arrScene = {scene_type: None for scene_type in SCENE_TYPE}
         self.currentScene = None
 
+        from Scene.Start_Scene import Start_Scene
+        from Scene.Test_Scene import Test_Scene
+        
         self.arrScene[SCENE_TYPE.START.value] = Start_Scene() 
-        self.arrScene[SCENE_TYPE.TEST.value] = CScene()
+        self.arrScene[SCENE_TYPE.TEST.value] = Test_Scene()
         self.arrScene[SCENE_TYPE.END.value] = CScene()
 
         self.currentScene = self.arrScene[SCENE_TYPE.START.value]
@@ -33,6 +36,9 @@ class SceneMgr:
         if self.currentScene:
             self.currentScene.Clean()
         self.currentScene = self.arrScene[new_scene_type.value]
-        self.currentScene.Init()
+        self.currentScene.Enter()
+        
+    def GetCurrentScene(self):
+        return self.currentScene
         
 sceneMgr = SceneMgr()

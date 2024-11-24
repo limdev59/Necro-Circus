@@ -38,3 +38,6 @@ class Test_Scene(CScene):
             for obj in group:
                 obj.Clean()
         print("Test_Scene: 종료")
+        
+    def Clean(self):
+        super.Clean()

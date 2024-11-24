@@ -1,5 +1,8 @@
 from enum import Enum, auto
 
+WINDOW_WIDTH = 1920
+WINDOW_HEIGHT = 1080
+
 class EVENT_TYPE(Enum):
     KEYBOARD = auto()
     MOUSE = auto()
@@ -15,8 +18,6 @@ class OBJECT_TYPE(Enum):
     ENEMY = 1
     ITEM = 2
     BACKGROUND= 3
-
-
 
 class KEY(Enum):
     LEFT = 37     # 화살표 왼쪽

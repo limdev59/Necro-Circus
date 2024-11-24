@@ -1,5 +1,5 @@
 from pico2d import *
-from Manager.KeyMgr import keyMgr, KEY, KEY_TYPE
+from Manager.KeyMgr import keyMgr
 from Constants import *
 
 class Event:
@@ -17,7 +17,7 @@ class EventMgr:
         return cls._instance
 
     def addEvent(self, event):
-        print(f"이벤트 추가: {event.type}, 데이터: {event.data}")
+        # print(f"이벤트 추가: {event.type}, 데이터: {event.data}")
         self.event_queue.append(event)
 
     def getEvents(self):
@@ -49,7 +49,6 @@ class EventMgr:
     def handleKeyboardEvent(self, event):
         key = event.data
         key_state = keyMgr.getKeyState(key)
-        print(f"키보드 이벤트: {key} 상태: {key_state}")
 
     def handleMouseEvent(self, event):
         print(f"마우스 이벤트: {event.data}")

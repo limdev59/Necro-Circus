@@ -2,7 +2,7 @@ from pico2d import *
 from CCore import Core
 
 def main():
-    open_canvas()
+    open_canvas(w=1920, h=1080,sync=True,full=False)
     Core.Init()
 
     while Core.is_running():

@@ -1,6 +1,6 @@
-from Manager.SceneMgr import sceneMgr
-from Manager.KeyMgr import keyMgr
 from Manager.EventMgr import eventMgr
+from Manager.KeyMgr import keyMgr
+from Manager.SceneMgr import sceneMgr
 
 class CCore:
     _instance = None
