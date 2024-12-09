@@ -48,24 +48,6 @@ class Monster(AnimSprite):
         else:
             self.velocity[1] = max(0, self.velocity[1])
 
-    def handle_input(self):
-        self.velocity[0] = 0
-        left = keyMgr.getKeyState(KEY.a.value) in [KEY_TYPE.HOLD, KEY_TYPE.TAP]
-        right = keyMgr.getKeyState(KEY.d.value) in [KEY_TYPE.HOLD, KEY_TYPE.TAP]
-
-        if left:
-            self.velocity[0] = -self.speed
-            self.fliper(True)
-        elif right:
-            self.velocity[0] = self.speed
-            self.fliper(False)
-
-
-        space = keyMgr.getKeyState(KEY.SPACE.value) in [KEY_TYPE.TAP]
-        if space and self.on_ground:
-            self.velocity[1] = self.jump_force
-            self.is_jumping = True
-            self.on_ground = False
 
     def check_bounds(self):
         if self.y <= 400:

@@ -60,31 +60,24 @@ class Sprite:
 
     def __repr__(self):
         return f'{type(self).__name__}({self.filename})'
-
-
+    
 class AnimSprite(Sprite):
-    def __init__(self, x, y, fps=20, scale = 1):
+    def __init__(self, x, y, fps=20, scale=1):
         super().__init__(None, x, y, scale)
         self.fps = fps
         self.animations = {}
         self.current_anim = None
         self.created_on = time.time()
 
-    def add_animation(self, state, filename, frame):
-        if state in self.animations:
-            anim = self.animations[state]
-            
-        self.state = state
+    def add_animation(self, state, filename, frame, clip_width, clip_height, start_x=0, start_y=0):
         self.image = load(filename)
-        self.created_on = time.time()
-        self.frame_count = frame
-        self.width = self.image.w // self.frame_count
-        self.height = self.image.h
         self.animations[state] = {
             "image": self.image,
-            "frame_count": self.frame_count,
-            "width": self.width,
-            "height": self.height,
+            "frame_count": frame,
+            "clip_width": clip_width,
+            "clip_height": clip_height,
+            "start_x": start_x,
+            "start_y": start_y,
         }
         if not self.current_anim:
             self.set_animation(state)
@@ -96,8 +89,10 @@ class AnimSprite(Sprite):
         anim_data = self.animations[anim_name]
         self.image = anim_data["image"]
         self.frame_count = anim_data["frame_count"]
-        self.width = anim_data["width"]
-        self.height = anim_data["height"]
+        self.clip_width = anim_data["clip_width"]
+        self.clip_height = anim_data["clip_height"]
+        self.start_x = anim_data["start_x"]
+        self.start_y = anim_data["start_y"]
         self.created_on = time.time()
 
     def get_anim_index(self):
@@ -109,21 +104,23 @@ class AnimSprite(Sprite):
             return
 
         index = self.get_anim_index()
+        src_x = self.start_x + index * self.clip_width
+        src_y = self.start_y
+
         if self.flip:
             self.image.clip_composite_draw(
-                index * self.width, 0,
-                self.width, self.height,
-                0,
-                'h',
+                src_x, src_y,
+                self.clip_width, self.clip_height,
+                0, 'h',
                 self.x, self.y,
-                self.width * self.scale, self.height *  self.scale, 
+                self.clip_width * self.scale, self.clip_height * self.scale
             )
         else:
             self.image.clip_draw(
-                index * self.width, 0,
-                self.width, self.height,
+                src_x, src_y,
+                self.clip_width, self.clip_height,
                 self.x, self.y,
-                self.width*  self.scale, self.height*  self.scale,
+                self.clip_width * self.scale, self.clip_height * self.scale
             )
 
     def Clean(self):

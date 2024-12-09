@@ -16,8 +16,8 @@ class Player(AnimSprite):
         self.state = "idle"
         self.animations = {
         }
-        self.add_animation("idle","./src/Assets/Images/player_default.png",5)
-        self.add_animation("walk","./src/Assets/Images/player_walk.png",8)
+        self.add_animation("idle","./src/Assets/Images/player_default.png",5, clip_width=64, clip_height=64, start_x=0, start_y=0)
+        self.add_animation("walk","./src/Assets/Images/player_walk.png",8, clip_width=64, clip_height=64, start_x=0, start_y=0)
         
         
     def Update(self):

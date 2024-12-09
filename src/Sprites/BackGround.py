@@ -16,9 +16,9 @@ class BackGround(AnimSprite):
         self.is_jumping = False
         self.state = "bg1"
         self.animations = {}
-        self.add_animation("bg1","./src/Assets/Images/backgrounds1.png",1)
-        self.add_animation("bg2","./src/Assets/Images/backgrounds2.png",1)
-        self.add_animation("bg3","./src/Assets/Images/graveyard-correction.png",1)
+        self.add_animation("bg1","./src/Assets/Images/backgrounds1.png",1,240,160)
+        self.add_animation("bg2","./src/Assets/Images/backgrounds2.png",1,240,160)
+        self.add_animation("bg3","./src/Assets/Images/graveyard-correction.png",1,240,160)
         
         
     def Update(self):
