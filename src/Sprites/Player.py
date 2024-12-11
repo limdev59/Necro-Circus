@@ -13,11 +13,11 @@ class Player(AnimSprite):
         self.gravity = -0.98
         self.on_ground = True
         self.is_jumping = False
-        self.state = "idle"
         self.animations = {
         }
-        self.add_animation("idle","./src/Assets/Images/player_default.png",5, clip_width=64, clip_height=64, start_x=0, start_y=0)
         self.add_animation("walk","./src/Assets/Images/player_walk.png",8, clip_width=64, clip_height=64, start_x=0, start_y=0)
+        self.add_animation("idle","./src/Assets/Images/player_default.png",5, clip_width=64, clip_height=64, start_x=0, start_y=0)
+        self.state = "idle"
         
         
     def Update(self):
@@ -67,18 +67,35 @@ class Player(AnimSprite):
             self.velocity[1] = self.jump_force
             self.is_jumping = True
             self.on_ground = False
+    def get_bb(self):
+        if not self.current_anim:
+            return 0, 0, 0, 0  # 애니메이션이 없으면 히트박스를 0으로 반환
 
+        width = self.clip_width * self.scale
+        height = self.clip_height * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l+60, b+5, r-60, t-10
     def check_bounds(self):
-        if self.y <= 400:
-            self.y = 400
+        ground_y = 400
+        screen_width = 1920
+        screen_height = 1080
+        l, b, r, t = self.get_bb()
+
+        if b <= ground_y:
+            self.y += ground_y - b
             self.on_ground = True
             self.is_jumping = False
+            self.velocity[1] = 0
 
-        if self.x < 0:
-            self.x = 0
-        elif self.x > 1920:
-            self.x = 1920
+        if l < 0:  # 화면 좌측 경계
+            self.x += -l  # x 좌표를 조정하여 히트박스가 화면 안으로 들어오게 함
+        elif r > screen_width:  # 화면 우측 경계
+            self.x -= (r - screen_width)
 
-        if self.y > 1080:
-            self.y = 1080
+        # 상단 경계 충돌
+        if t > screen_height:  # 화면 상단 경계
+            self.y -= (t - screen_height)
             self.velocity[1] = 0

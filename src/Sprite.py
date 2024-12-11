@@ -71,16 +71,16 @@ class AnimSprite(Sprite):
 
     def add_animation(self, state, filename, frame, clip_width, clip_height, start_x=0, start_y=0):
         self.image = load(filename)
+        image_height = self.image.h  # 이미지의 전체 높이를 가져옴
         self.animations[state] = {
             "image": self.image,
             "frame_count": frame,
             "clip_width": clip_width,
             "clip_height": clip_height,
             "start_x": start_x,
-            "start_y": start_y,
+            "start_y": image_height - start_y - clip_height,  # 상단 기준으로 변환
         }
-        if not self.current_anim:
-            self.set_animation(state)
+        self.set_animation(state)
 
     def set_animation(self, anim_name):
         if anim_name not in self.animations:
@@ -98,7 +98,18 @@ class AnimSprite(Sprite):
     def get_anim_index(self):
         elapsed = time.time() - self.created_on
         return round(elapsed * self.fps) % self.frame_count
+    def get_bb(self):
+        if not self.current_anim:
+            return 0, 0, 0, 0  # 애니메이션이 없으면 히트박스를 0으로 반환
 
+        width = self.clip_width * self.scale
+        height = self.clip_height * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l, b, r, t
+    
     def Render(self):
         if not self.current_anim:
             return
@@ -106,7 +117,8 @@ class AnimSprite(Sprite):
         index = self.get_anim_index()
         src_x = self.start_x + index * self.clip_width
         src_y = self.start_y
-
+        l, b, r, t = self.get_bb()
+        draw_rectangle(l, b, r, t)
         if self.flip:
             self.image.clip_composite_draw(
                 src_x, src_y,
@@ -126,3 +138,4 @@ class AnimSprite(Sprite):
     def Clean(self):
         print(f"Cleaning Sprite: {self.filename}")
         self.image = None  # 이미지 참조 해제
+    

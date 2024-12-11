@@ -18,6 +18,7 @@ class OBJECT_TYPE(Enum):
     ENEMY = 1
     ITEM = 2
     BACKGROUND= 3
+    
 
 class KEY(Enum):
     LEFT = 37     # 화살표 왼쪽
