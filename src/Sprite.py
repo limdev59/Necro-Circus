@@ -19,13 +19,24 @@ class Sprite:
         self.scale = scale
         self.image = image
         self.flip = 1
+        self.Deactivation = False
 
     def Render(self, camera_x, camera_y):
-        pass
+        if self.image:
+            # 이미지 렌더링 (이미지가 존재하면)
+            self.image.draw(self.x - camera_x, self.y - camera_y, self.image.w * self.scale, self.image.h * self.scale)
+
     def Update(self):
         pass
 
-
+    def get_bb(self):
+        width = self.image.w * self.scale
+        height = self.image.h * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l, b, r, t
     def contains_xy(self, x, y):
         l, b, r, t = self.get_bb()
         return l <= x < r and b <= y < t
@@ -97,29 +108,31 @@ class AnimSprite(Sprite):
     def Render(self, camera_x, camera_y):
         if not self.current_anim:
             return
-
+        if not self.active:
+            return
         index = self.get_anim_index()
         src_x = self.start_x + index * self.clip_width
         src_y = self.start_y
         l, b, r, t = self.get_bb()
         
-        if self.flip:
-            self.image.clip_composite_draw(
-                src_x, src_y,
-                self.clip_width, self.clip_height,
-                0, 'h',
-                self.x-camera_x, self.y-camera_y,
-                self.clip_width * self.scale, self.clip_height * self.scale
-            )
-        else:
-            self.image.clip_draw(
-                src_x, src_y,
-                self.clip_width, self.clip_height,
-                self.x-camera_x, self.y-camera_y,
-                self.clip_width * self.scale, self.clip_height * self.scale
-            )
-        draw_rectangle(l-camera_x, b-camera_y, r-camera_x, t-camera_y)
+        if self.image != None:
+            if self.flip:
+                self.image.clip_composite_draw(
+                    src_x, src_y,
+                    self.clip_width, self.clip_height,
+                    0, 'h',
+                    self.x-camera_x, self.y-camera_y,
+                    self.clip_width * self.scale, self.clip_height * self.scale
+                )
+            else:
+                self.image.clip_draw(
+                    src_x, src_y,
+                    self.clip_width, self.clip_height,
+                    self.x-camera_x, self.y-camera_y,
+                    self.clip_width * self.scale, self.clip_height * self.scale
+                )
 
     def Clean(self):
-        print(f"Cleaning Sprite: {self.filename}")
-        self.image = None  # 이미지 참조 해제
+        print(f"Cleaning Sprite: {self.__class__.__name__}")
+        #self.image = None  # 이미지 참조 해제
+        self.active = False

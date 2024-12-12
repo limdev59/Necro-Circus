@@ -9,8 +9,8 @@ from Config import *
 
 class CScene:
     def __init__(self):
-        # Enum 멤버를 사용해 초기화
         self.arrObj = {group: [] for group in OBJECT_TYPE}
+        self.buttons = []  # 버튼 리스트 추가
         self.tiled_map = None 
         self.scale = 18
         self.camera_x = 0  # 카메라 절대 좌표
@@ -18,6 +18,13 @@ class CScene:
         self.load_world_map("./src/Assets/Images/title.tmj")
         self.add_tiles()
 
+    def add_button(self, button):
+        self.buttons.append(button)
+
+    def handle_mouse_click(self, x, y):
+        """마우스 클릭 처리"""
+        for button in self.buttons:
+            button.handle_click(x, y)
     def load_world_map(self, tmx_file_path):
         # .tmj 파일을 읽어서 타일맵 정보를 로드
         with open(tmx_file_path, 'r') as f:
@@ -44,11 +51,16 @@ class CScene:
             OBJECT_TYPE.TILE,
             OBJECT_TYPE.ITEM,
             OBJECT_TYPE.ENEMY,
+            OBJECT_TYPE.WEAPON,
             OBJECT_TYPE.PLAYER,
         ]
         for group in render_order:
             for obj in self.arrObj[group]:
                 obj.Render(self.camera_x,self.camera_y)
+                
+        # 버튼 렌더링
+        for button in self.buttons:
+            button.Render(self.camera_x, self.camera_y)
     
     def add_tiles(self):
         if self.tiled_map:
@@ -112,9 +124,11 @@ class CScene:
         self.camera_y = value
     
     def Clean(self):
-        # 모든 객체 그룹을 순회하며 각 객체의 Clean 메서드를 호출
+        # 기존 객체 정리
         for group, objects in self.arrObj.items():
-            for obj in objects:
-                obj.Clean()  # 객체의 정리(Clean) 메서드 호출
-            objects.clear()  # 그룹 내 모든 객체 제거
-        print("CScene: 모든 객체 그룹 정리 완료")
+            
+            objects.clear()
+        
+        # 버튼 정리
+        self.buttons.clear()
+        print("CScene: 모든 버튼 정리 완료")

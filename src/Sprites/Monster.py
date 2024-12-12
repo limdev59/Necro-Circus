@@ -18,40 +18,79 @@ class Skeleton1(AnimSprite):
         self.target = None  # 따라갈 대상 (플레이어)
         self.animations = {
         }
-        self.add_animation("knock_back", "./src/Assets/Images/Skeletons2.png", 1, clip_width=31, clip_height=46, start_x=1, start_y=2)
-        self.add_animation("walk", "./src/Assets/Images/Skeletons2.png", 8, clip_width=31, clip_height=48, start_x=34, start_y=2)
-        self.add_animation("idle", "./src/Assets/Images/Skeletons2.png", 1, clip_width=31, clip_height=46, start_x=1, start_y=2)
+        self.add_animation("knock_back", "./src/Assets/Images/Skeletons.png", 1, clip_width=31, clip_height=46, start_x=1, start_y=2)
+        self.add_animation("walk", "./src/Assets/Images/Skeletons.png", 8, clip_width=31, clip_height=48, start_x=34, start_y=2)
+        self.add_animation("idle", "./src/Assets/Images/Skeletons.png", 1, clip_width=31, clip_height=46, start_x=1, start_y=2)
         self.state = "idle"
 
         # 점프 관련 타이머 설정
         self.jump_interval = random.uniform(1.5, 5.0)  # 랜덤 시간 간격 (1.5초 ~ 3초 사이)
         self.last_jump_time = time.time()  # 마지막 점프 시간 기록
 
+        self.health = 100  # Initial health
+        self.invincible_time = 0  # Time when invincibility starts
+        self.invincible_duration = 2  # Invincibility lasts for 3 seconds
+        self.knockback = 0
+    def die(self):
+        self.set_animation("death")
+        self.Clean()
+        
     def Update(self):
         if not self.active:
             return
 
         current_time = time.time()
-
+        
+        if self.health <= 0:
+            self.Clean()  # 체력이 0 이하일 때 죽음 처리
+            return
         # 랜덤 시간마다 점프하도록 설정
         if current_time - self.last_jump_time > self.jump_interval and self.on_ground:
             self.jump()
             self.last_jump_time = current_time  # 점프한 시간 기록
             self.jump_interval = random.uniform(1.5, 3.0)  # 다음 점프 간격을 랜덤으로 설정
 
+        if self.invincible_time > 0 and current_time - self.invincible_time > self.invincible_duration:
+            self.invincible_time = 0  # End invincibility
+        
         prev_x, prev_y = self.x, self.y
         self.apply_gravity()
         self.follow_target()
-        self.x += self.velocity[0]
+        self.x += self.velocity[0]+self.knockback
         self.y += self.velocity[1]
-
+        if self.knockback>0:
+            self.knockback-=1
+        elif self.knockback<0:
+            self.knockback+=1
+            
         self.on_ground = False  # 타일 충돌 전까지 공중 상태로 설정
         for tile in sceneMgr.GetCurrentScene().arrObj[OBJECT_TYPE.TILE]:
             if check_collision(self.get_bb(), tile.get_bb()):
                 self.handle_tile_collision(tile, prev_x, prev_y)
 
         self.update_state()
+        for weapon in sceneMgr.GetCurrentScene().arrObj[OBJECT_TYPE.WEAPON]:
+            if check_collision(self.get_bb(), weapon.get_bb()) and self.invincible_time == 0:
+                if weapon.name == 'lance':
+                    self.take_damage(15, weapon)
+                    self.invincible_duration-=1
+                elif weapon.name == 'club':
+                    self.take_damage(10, weapon)
+                    self.invincible_duration-=1
+                elif weapon.name == 'boomerang':
+                    self.take_damage(25, weapon)
+                    self.invincible_duration-=1
 
+    def take_damage(self, damage, enemy):
+        self.health -= damage
+        self.invincible_time = time.time()
+        knockback_direction = -1 if self.x < enemy.x else 1
+        self.knockback = knockback_direction * 30
+        self.velocity[1] = self.jump_force
+        self.set_animation("knock_back")
+        self.fps = 10
+        self.state = "knock_back"
+        
     def jump(self):
         if self.on_ground:
             self.velocity[1] = self.jump_force  # 점프 힘 적용
@@ -145,8 +184,8 @@ class Skeleton1(AnimSprite):
 class Skeleton2(Skeleton1):
     def __init__(self, x, y, fps=20, scale = 1):
         super().__init__(x, y, fps, scale)
-        self.add_animation("knock_back","./src/Assets/Images/Skeletons2.png",1, clip_width=31, clip_height=46, start_x=1, start_y=55)
-        self.add_animation("walk","./src/Assets/Images/Skeletons2.png",8, clip_width=31, clip_height=48, start_x=34, start_y=55)
-        self.add_animation("idle","./src/Assets/Images/Skeletons2.png",1, clip_width=31, clip_height=46, start_x=1, start_y=55)
+        self.add_animation("knock_back","./src/Assets/Images/Skeletons.png",1, clip_width=31, clip_height=46, start_x=1, start_y=55)
+        self.add_animation("walk","./src/Assets/Images/Skeletons.png",8, clip_width=31, clip_height=48, start_x=34, start_y=55)
+        self.add_animation("idle","./src/Assets/Images/Skeletons.png",1, clip_width=31, clip_height=46, start_x=1, start_y=55)
       
         self.state = "idle"

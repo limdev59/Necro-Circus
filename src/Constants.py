@@ -10,15 +10,17 @@ class EVENT_TYPE(Enum):
 
 class SCENE_TYPE(Enum):
     START = 0
-    TEST = 1
-    END = 2
+    SCENE2 = 1
+    SCENE3 = 2
+    SCENE4 = 3
+    END =  4
 
 class OBJECT_TYPE(Enum):
     PLAYER = 0
     ENEMY = 1
     BACKGROUND= 2
     ITEM = 3
-    WEAPONE = 4
+    WEAPON = 4
     TILE= 5
     
 

@@ -33,7 +33,6 @@ class Tile(Sprite):
             w=self.w,
             h=self.h,
         )
-        draw_rectangle(l-camera_x, b-camera_y, r-camera_x, t-camera_y)
     
     def get_bb(self):
         width = self.width * self.scale

@@ -14,11 +14,14 @@ class SceneMgr:
         self.currentScene = None
 
         from Scene.Start_Scene import Start_Scene
-        from Scene.Test_Scene import Test_Scene
+        from Scene.Scene2 import Scene2
+        from Scene.Scene3 import Scene3
+        from Scene.Scene4 import Scene4
         
         self.arrScene[SCENE_TYPE.START.value] = Start_Scene() 
-        self.arrScene[SCENE_TYPE.TEST.value] = Test_Scene()
-        self.arrScene[SCENE_TYPE.END.value] = CScene()
+        self.arrScene[SCENE_TYPE.SCENE2.value] = Scene2()
+        self.arrScene[SCENE_TYPE.SCENE3.value] = Scene3()
+        self.arrScene[SCENE_TYPE.SCENE4.value] = Scene4()
 
         self.currentScene = self.arrScene[SCENE_TYPE.START.value]
         self.currentScene.Enter()
@@ -34,7 +37,7 @@ class SceneMgr:
     def ChangeScene(self, new_scene_type):
         if self.currentScene:
             self.currentScene.Clean()
-        self.currentScene = self.arrScene[new_scene_type.value]
+        self.currentScene = self.arrScene[new_scene_type]
         self.currentScene.Enter()
         
     def GetCurrentScene(self):

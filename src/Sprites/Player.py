@@ -1,15 +1,18 @@
 from Manager.KeyMgr import keyMgr
 from Sprite import AnimSprite, Sprite, load
 from Manager.SceneMgr import sceneMgr
+from pico2d import *
 from Constants import *
 from Config import *
 import time
+import math
 
 class Weapon(Sprite):
     def __init__(self, x, y, image_file, scale=1, angle=0):
-        super().__init__(load(image_file), x, y, scale, angle)  # 부모 클래스의 초기화 호출
+        super().__init__(load(image_file), x, y, scale)  # 부모 클래스의 초기화 호출
         self.angle = angle  # 각도 초기화
         self.weapon_image = self.image  # 무기 이미지 저장
+        self.name = ''
 
     def set_angle(self, angle):
         """무기의 회전 각도를 설정하는 메서드"""
@@ -17,18 +20,58 @@ class Weapon(Sprite):
 
     def Render(self, camera_x, camera_y):
         """회전된 무기를 화면에 그리는 메서드"""
+        l, b, r, t = self.get_bb()
         if self.weapon_image:
-            self.weapon_image.draw_rot(self.x - camera_x, self.y - camera_y, self.scale, self.angle)
+            self.weapon_image.rotate_draw(math.radians(self.angle), self.x - camera_x, self.y - camera_y, self.weapon_image.w*self.scale,self.weapon_image.h*self.scale)
 
     def Update(self):
-        """무기의 상태를 업데이트하는 메서드 (추후 추가 기능을 위해 정의 가능)"""
+        
         pass
 
     def Clean(self):
         """무기 이미지 메모리 해제"""
         print(f"Cleaning Weapon: {self.weapon_image}")
         self.weapon_image = None
-
+class Lance(Weapon):
+    def __init__(self, x, y, scale=1, angle=0):
+        super().__init__(x, y, "./src/Assets/Images/lance.png", scale, angle)
+        self.name = 'lance'
+    def get_bb(self):
+        width = self.image.w * self.scale
+        height = self.image.h * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l-65, b+90, r+65, t-90
+class Boomerang (Weapon):
+    def __init__(self, x, y, scale=1, angle=0):
+        super().__init__(x, y, "./src/Assets/Images/boomerang .png", scale, angle)
+        self.name = 'boomerang'
+    def Update(self):
+        self.angle = (self.angle+30)%360
+    def get_bb(self):
+        width = self.image.w * self.scale
+        height = self.image.h * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l, b, r, t
+class Club(Weapon):
+    def __init__(self, x, y, scale=1, angle=0):
+        super().__init__(x, y, "./src/Assets/Images/Club.png", scale, angle)
+        self.name = 'club'
+    def Update(self):
+        self.angle +=  40*math.sin(4 * time.time() )
+    def get_bb(self):
+        width = self.image.w * self.scale
+        height = self.image.h * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l, b, r, t
 class Player(AnimSprite):
     def __init__(self, x, y, fps=20, scale=1):
         super().__init__(x, y, fps, scale)
@@ -43,6 +86,9 @@ class Player(AnimSprite):
         self.add_animation("walk", "./src/Assets/Images/player_walk.png", 8, clip_width=64, clip_height=64, start_x=0, start_y=0)
         self.add_animation("idle", "./src/Assets/Images/player_default.png", 5, clip_width=64, clip_height=64, start_x=0, start_y=0)
         self.state = "idle"
+        
+        self.direction = 1
+        self.lance_rot =315
 
         # Health and Invincibility
         self.health = 50  # Initial health
@@ -54,7 +100,6 @@ class Player(AnimSprite):
         if not self.active:
             return
 
-        # Check if invincibility has expired
         if self.invincible_time > 0 and time.time() - self.invincible_time > self.invincible_duration:
             self.invincible_time = 0  # End invincibility
 
@@ -69,6 +114,21 @@ class Player(AnimSprite):
             self.knockback+=1
 
         self.on_ground = False  # 타일 충돌 전까지 공중 상태로 설정
+        for wp in sceneMgr.GetCurrentScene().arrObj[OBJECT_TYPE.WEAPON]:
+            l,b,r,t = wp.get_bb()
+            if wp.name == 'lance':
+                wp.x = self.direction*(r-l)//2+self.x
+                wp.y = self.y
+                wp.angle = self.lance_rot
+            if wp.name == 'club':
+                current_time = time.time()  # 현재 시간을 가져옴
+                swing_offset = 150 * math.sin(4 * current_time)
+                wp.x = swing_offset+self.x
+                wp.y = self.y
+            if wp.name == 'boomerang':
+                current_time = time.time() 
+                wp.x = 200 * math.sin(8 * current_time)+self.x
+                wp.y = 150 * math.cos(8 * current_time)+self.y
         for tile in sceneMgr.GetCurrentScene().arrObj[OBJECT_TYPE.TILE]:
             if check_collision(self.get_bb(), tile.get_bb()):
                 self.handle_tile_collision(tile, prev_x, prev_y)
@@ -77,7 +137,7 @@ class Player(AnimSprite):
 
         # Handle collision with enemies (OBJECT_TYPE.ENEMY)
         for enemy in sceneMgr.GetCurrentScene().arrObj[OBJECT_TYPE.ENEMY]:
-            if check_collision(self.get_bb(), enemy.get_bb()) and self.invincible_time == 0:
+            if enemy.active ==True and check_collision(self.get_bb(), enemy.get_bb()) and self.invincible_time == 0:
                 self.take_damage(10, enemy)  # Take 10 damage from the enemy
 
     def take_damage(self, damage, enemy):
@@ -86,6 +146,7 @@ class Player(AnimSprite):
         knockback_direction = -1 if self.x < enemy.x else 1
         self.knockback = knockback_direction * 30  # Knockback force
         self.velocity[1] = self.jump_force
+        
     def update_state(self):
         if self.velocity[0] != 0:  # 이동 중
             if self.state != "walk":
@@ -110,8 +171,9 @@ class Player(AnimSprite):
         
         current_scene = sceneMgr.GetCurrentScene()
         
-        
         if right:
+            self.direction = 1
+            self.lance_rot =315
             self.velocity[0] = self.speed
             self.fliper(False)
             if 960 <= self.x:
@@ -119,6 +181,8 @@ class Player(AnimSprite):
                 current_scene.set_camera_x(min(2615, new_camera_x))
 
         elif left:
+            self.direction = -1
+            self.lance_rot =135
             self.velocity[0] = -self.speed
             self.fliper(True)
             if 3590 >= self.x:
