@@ -14,33 +14,17 @@ def load(file):
 
 
 class Sprite:
-    def __init__(self, filename, x, y, scale=1):
-        self.filename = filename
-        if filename is None:
-            self.image = None
-            self.width, self.height = 0, 0
-        else:
-            self.image = load(filename)
-            self.width, self.height = self.image.w, self.image.h
+    def __init__(self,image, x, y, scale=1):
         self.x, self.y = x, y
         self.scale = scale
+        self.image = image
         self.flip = 1
 
-    def Render(self):
-        if self.flip:
-            self.image.draw(self.x, self.y, self.width * self.scale, self.height * self.scale, -1)  # sx=-1로 반전
-        else:
-            self.image.draw(self.x, self.y, self.width * self.scale, self.height * self.scale)
-
+    def Render(self, camera_x, camera_y):
+        pass
     def Update(self):
         pass
 
-    def get_bb(self):
-        l = self.x - self.width // 2
-        b = self.y - self.height // 2
-        r = self.x + self.width // 2
-        t = self.y + self.height // 2
-        return l, b, r, t
 
     def contains_xy(self, x, y):
         l, b, r, t = self.get_bb()
@@ -110,7 +94,7 @@ class AnimSprite(Sprite):
         t = b + height
         return l, b, r, t
     
-    def Render(self):
+    def Render(self, camera_x, camera_y):
         if not self.current_anim:
             return
 
@@ -118,24 +102,24 @@ class AnimSprite(Sprite):
         src_x = self.start_x + index * self.clip_width
         src_y = self.start_y
         l, b, r, t = self.get_bb()
-        draw_rectangle(l, b, r, t)
+        
         if self.flip:
             self.image.clip_composite_draw(
                 src_x, src_y,
                 self.clip_width, self.clip_height,
                 0, 'h',
-                self.x, self.y,
+                self.x-camera_x, self.y-camera_y,
                 self.clip_width * self.scale, self.clip_height * self.scale
             )
         else:
             self.image.clip_draw(
                 src_x, src_y,
                 self.clip_width, self.clip_height,
-                self.x, self.y,
+                self.x-camera_x, self.y-camera_y,
                 self.clip_width * self.scale, self.clip_height * self.scale
             )
+        draw_rectangle(l-camera_x, b-camera_y, r-camera_x, t-camera_y)
 
     def Clean(self):
         print(f"Cleaning Sprite: {self.filename}")
         self.image = None  # 이미지 참조 해제
-    

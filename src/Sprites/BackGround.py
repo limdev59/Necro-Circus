@@ -1,9 +1,49 @@
 from Manager.KeyMgr import keyMgr
 from Sprite import Sprite, AnimSprite, load
-from Manager.SceneMgr import sceneMgr
-import time
 from Constants import *
+from pico2d import *
 
+class Tile(Sprite):
+    def __init__(self, image, left, bottom,width,height,x, y, w, h, scale = 1):
+        super().__init__(x, y, scale)
+        self.image = image
+        self.left = left
+        self.bottom = bottom
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.scale = scale
+        self.scroll_x = 0
+        self.scroll_y = 0
+
+    def Update(self):
+        pass
+    def Render(self, camera_x, camera_y):
+        l, b, r, t = self.get_bb()
+        self.image.clip_draw(
+            left=self.left,
+            bottom=self.bottom,
+            width=self.width,
+            height=self.height,
+            x=self.x-camera_x,
+            y=self.y-camera_y,
+            w=self.w,
+            h=self.h,
+        )
+        draw_rectangle(l-camera_x, b-camera_y, r-camera_x, t-camera_y)
+    
+    def get_bb(self):
+        width = self.width * self.scale
+        height = self.height * self.scale
+        l = self.x - width // 2
+        b = self.y - height // 2  # 중심에서 clip_height의 절반만큼 내려감
+        r = self.x + width // 2
+        t = b + height
+        return l, b, r, t
+    
 class BackGround(AnimSprite):
     def __init__(self, x, y, fps=20, scale = 1):
         super().__init__(x, y, fps, scale)

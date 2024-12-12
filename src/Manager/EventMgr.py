@@ -51,6 +51,6 @@ class EventMgr:
         key_state = keyMgr.getKeyState(key)
 
     def handleMouseEvent(self, event):
-        print(f"마우스 이벤트: {event.data}")
+        pass
 
 eventMgr = EventMgr()

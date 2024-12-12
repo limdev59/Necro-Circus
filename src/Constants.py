@@ -16,8 +16,10 @@ class SCENE_TYPE(Enum):
 class OBJECT_TYPE(Enum):
     PLAYER = 0
     ENEMY = 1
-    ITEM = 2
-    BACKGROUND= 3
+    BACKGROUND= 2
+    ITEM = 3
+    WEAPONE = 4
+    TILE= 5
     
 
 class KEY(Enum):
@@ -97,3 +99,12 @@ class KEY_TYPE(Enum):
     TAP = auto()
     HOLD = auto()
     AWAY = auto()
+    
+def check_collision(a_bb, b_bb):
+    """두 객체의 히트박스를 비교하여 충돌 여부를 반환."""
+    a_l, a_b, a_r, a_t = a_bb
+    b_l, b_b, b_r, b_t = b_bb
+
+    if a_r < b_l or a_l > b_r or a_t < b_b or a_b > b_t:
+        return False  # 겹치지 않음
+    return True  # 겹침

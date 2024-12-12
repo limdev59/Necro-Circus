@@ -1,7 +1,6 @@
 from CScene import CScene
 from Constants import *
 
-
 class SceneMgr:
     _instance = None
 
