@@ -15,7 +15,7 @@ class CScene:
         self.scale = 18
         self.camera_x = 0  # 카메라 절대 좌표
         self.camera_y = 70
-        self.load_world_map("./src/Assets/Images/title.tmj")
+        self.load_world_map("./src/Assets/Images/title.json")
         self.add_tiles()
 
     def add_button(self, button):
@@ -26,7 +26,6 @@ class CScene:
         for button in self.buttons:
             button.handle_click(x, y)
     def load_world_map(self, tmx_file_path):
-        # .tmj 파일을 읽어서 타일맵 정보를 로드
         with open(tmx_file_path, 'r') as f:
             data = json.load(f)
         

@@ -11,7 +11,7 @@ import random
 class Start_Scene(CScene):
     def __init__(self):
         super().__init__()
-        self.load_world_map("./src/Assets/Images/title.tmj")
+        self.load_world_map("./src/Assets/Images/title.json")
     def Enter(self):
         start_button = Button("./src/Assets/Images/button.png", x=100, y=300, width=200, height=50, text="Start", on_click=self.start_game)
         exit_button = Button("./src/Assets/Images/button.png", x=100, y=100, width=200, height=50, text="Exit", on_click=self.exit_game)
